@@ -112,6 +112,10 @@ app.get('/run', function(req, res){
     console.log(data);
     io.emit('protractor-log', data);
   });
+  runProcess.stderr.on('data', function(data){
+    console.log(data);
+    io.emit('protractor-log', data);
+  });
   var message = 'Running protractor ' + confFile;
   console.log(message);
   res.send(message);
@@ -127,11 +131,10 @@ app.get('/webdriver-manager/:command', function(req, res){
 
     var drivers = [{driver: 'firefox'}];
     stdout.forEach(function(driver){
-      if(driver.match(/is up to date/i) && driver.match(/chrome|firefox|ie/i))
+      if(driver.match(/versions available/i) && driver.match(/chrome|firefox|ie/i))
           drivers.push({driver: driver.match(/(\w+)/)[0]});
     });
 
-    //console.log(stdout);
     res.send(drivers);
 
   });
